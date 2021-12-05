@@ -1,0 +1,94 @@
+type Command struct {
+    direction: String,
+    distance: Int64
+}
+
+function parseCommands(text: String) -> Vector of Command {
+    var i = 0
+    var commands = Vector(Command)
+    var current_command = Command("", 0)
+    var state = 2   // 0: parsing command, 1: parsing number, 2: done parsing
+    while (True) {
+        if (i < text.length()) {
+            match (text[i]) {   // assume distance is 0 through 9
+                '0' -> {
+                    set current_command.distance = 0
+                }
+                '1' -> {
+                    set current_command.distance = 1
+                }
+                '2' -> {
+                    set current_command.distance = 2
+                }
+                '3' -> {
+                    set current_command.distance = 3
+                }
+                '4' -> {
+                    set current_command.distance = 4
+                }
+                '5' -> {
+                    set current_command.distance = 5
+                }
+                '6' -> {
+                    set current_command.distance = 6
+                }
+                '7' -> {
+                    set current_command.distance = 7
+                }
+                '8' -> {
+                    set current_command.distance = 8
+                }
+                '9' -> {
+                    set current_command.distance = 9
+                }
+                '\n' -> {
+                    if (state == 1) {
+                        run commands.append!(current_command)
+                        set state = 2
+                    }
+                }
+                else -> {
+                    if (state == 2) {
+                        set state = 0
+                        var direction = ""
+                        while (text[i] != ' ') {
+                            run direction.append!(text[i])
+                            set i += 1
+                        }
+                        set current_command.direction = direction
+                        set state = 1
+                    }
+                }
+            }
+            
+            set i += 1
+        } else {
+            break
+        }
+    }
+
+    return commands
+}
+
+function main() {
+    var input = File("input1.txt").to_string()
+
+    var commands = parseCommands(input)
+    
+    var horizontal = 0
+    var depth = 0
+
+    for (x in commands) {
+        match (x.direction) {
+            "forward" -> set horizontal += x.distance
+            "down" -> set depth += x.distance
+            "up" -> set depth -= x.distance
+            else -> {
+                print "Error!"
+                return
+            }
+        }
+    }
+
+    print "Part One: ", horizontal * depth
+}
