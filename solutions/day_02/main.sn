@@ -70,11 +70,7 @@ function parseCommands(text: String) -> Vector of Command {
     return commands
 }
 
-function main() {
-    var input = File("input1.txt").to_string()
-
-    var commands = parseCommands(input)
-    
+function part1(commands: Vector of Command) -> Int64 {
     var horizontal = 0
     var depth = 0
 
@@ -85,10 +81,42 @@ function main() {
             "up" -> set depth -= x.distance
             else -> {
                 print "Error!"
-                return
+                exit 1
             }
         }
     }
 
-    print "Part One: ", horizontal * depth
+    return horizontal * depth
+}
+
+function part2(commands: Vector of Command) -> Int64 {
+    var horizontal = 0
+    var depth = 0
+    var aim = 0
+
+    for (x in commands) {
+        match (x.direction) {
+            "forward" -> {
+                set horizontal += x.distance
+                set depth += x.distance * aim
+            }
+            "down" -> set aim += x.distance
+            "up" -> set aim -= x.distance
+            else -> {
+                print "Error!"
+                exit 1
+            }
+        }
+    }
+
+    return horizontal * depth
+}
+
+function main() {
+    var input = File("input1.txt").to_string()
+
+    var commands = parseCommands(input)
+    
+    print "Part One: ", part1(commands)
+    print "Part Two: ", part2(commands)
 }
