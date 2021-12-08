@@ -1,0 +1,83 @@
+include input1.sn
+
+function sum(arr: Array of Int64) -> Int64 {
+    var s = 0
+    for (x in arr) {
+        set s += x
+    }
+    return s
+}
+
+function abs(x: Int64) -> Int64 {
+    if (x < 0) {
+        return -x
+    } else {
+        return x
+    }
+}
+
+function max(arr: Array of Int64) -> Int64 {
+    var m = -1
+    var valid = False
+    for (x in arr) {
+        if (valid == False or (x > m)) {
+            set m = x
+            set valid = True
+        }
+    }
+    return m
+}
+
+function totalFuelToReachPositionLinear(arr: Array of Int64, position: Int64) -> Int64 {
+    var s = 0
+    for (x in arr) {
+        set s += abs(x - position)
+    }
+    return s
+}
+
+function totalFuelToReachPositionTriangular(arr: Array of Int64, position: Int64) -> Int64 {
+    var s = 0
+    for (x in arr) {
+        const change = abs(x - position)
+        set s += (change * (change + 1)) / 2    // compute nth triangular number, where n is the change in position
+    }
+    return s
+}
+
+function part1(input: Array of Int64) -> Int64 {
+    var max_position = max(input)
+
+    var min_fuel = -1
+    var valid = False
+    for (i = 0, max_position + 1) {
+        var fuel = totalFuelToReachPositionLinear(input, i)
+        if (valid == False or (fuel < min_fuel)) {
+            set min_fuel = fuel
+            set valid = True
+        }
+    }
+    return min_fuel
+}
+
+function part2(input: Array of Int64) -> Int64 {
+    var max_position = max(input)
+
+    var min_fuel = -1
+    var valid = False
+    for (i = 0, max_position + 1) {
+        var fuel = totalFuelToReachPositionTriangular(input, i)
+        if (valid == False or (fuel < min_fuel)) {
+            set min_fuel = fuel
+            set valid = True
+        }
+    }
+    return min_fuel
+}
+
+function main() {
+    const input = getInput()
+
+    print "Part One: ", part1(input)
+    print "Part Two: ", part2(input)
+}
