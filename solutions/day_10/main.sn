@@ -1,0 +1,169 @@
+function split(input: String) -> Vector of String {
+    var lines = Vector(String)
+
+    var current_line = ""
+    for (x in input) {
+        if (x == '\n') {
+            run lines.append!(current_line)
+            set current_line = ""
+        } else {
+            run current_line.append!(x)
+        }
+    }
+
+    return lines
+}
+
+// Selection sort
+function sort(mutate arr: Vector of Int64) {
+    if (arr.length() == 0) {
+        return
+    }
+
+    for (i = 0, arr.length()) {
+        var min = arr[i]
+        var min_index = i
+        for (j = i, arr.length()) {
+            if (arr[j] < min) {
+                set min = arr[j]
+                set min_index = j
+            }
+        }
+
+        set arr[min_index] = arr[i]
+        set arr[i] = min
+    }
+}
+
+function part1(input: String) {
+    var lines = split(input)
+    var score = 0
+
+    for (line in lines) {
+        var opening_stack = Vector(Char)
+
+        for (x in line) {
+            match (x) {
+                '(', '[', '{', '<' -> {
+                    run opening_stack.append!(x)
+                }
+                ')' -> {
+                    const last = opening_stack.pop!()
+                    if (last != '(') {
+                        set score += 3
+                        break
+                    }
+                }
+                ']' -> {
+                    const last = opening_stack.pop!()
+                    if (last != '[') {
+                        set score += 57
+                        break
+                    }
+                }
+                '}' -> {
+                    const last = opening_stack.pop!()
+                    if (last != '{') {
+                        set score += 1197
+                        break
+                    }
+                }
+                '>' -> {
+                    const last = opening_stack.pop!()
+                    if (last != '<') {
+                        set score += 25137
+                        break
+                    }
+                }
+            }
+        }
+    }
+
+    print "Part One: ", score
+}
+
+function part2(input: String) {
+    var lines = split(input)
+    var scores = Vector(Int64)
+
+    for (line in lines) {
+        var opening_stack = Vector(Char)
+        var closing_string = ""
+        var corrupt = False
+
+        for (x in line) {
+            match (x) {
+                '(', '[', '{', '<' -> {
+                    run opening_stack.append!(x)
+                }
+                ')' -> {
+                    const last = opening_stack.pop!()
+                    if (last != '(') {
+                        set corrupt = True
+                        break
+                    }
+                }
+                ']' -> {
+                    const last = opening_stack.pop!()
+                    if (last != '[') {
+                        set corrupt = True
+                        break
+                    }
+                }
+                '}' -> {
+                    const last = opening_stack.pop!()
+                    if (last != '{') {
+                        set corrupt = True
+                        break
+                    }
+                }
+                '>' -> {
+                    const last = opening_stack.pop!()
+                    if (last != '<') {
+                        set corrupt = True
+                        break
+                    }
+                }
+            }
+        }
+
+        if (corrupt == False) {
+            var score = 0
+            const len = opening_stack.length()
+            for (i = 0, len) {
+                const x = opening_stack.pop!()
+                match (x) {
+                    '(' -> {
+                        run closing_string.append!(')')
+                        set score = (score * 5) + 1
+                    }
+                    '[' -> {
+                        run closing_string.append!(']')
+                        set score = (score * 5) + 2
+                    }
+                    '{' -> {
+                        run closing_string.append!('}')
+                        set score = (score * 5) + 3
+                    }
+                    '<' -> {
+                        run closing_string.append!('>')
+                        set score = (score * 5) + 4
+                    }
+                }
+            }
+            run scores.append!(score)
+        }
+    }
+
+    run sort(mutate scores)
+    const final_score = scores[scores.length() / 2]
+
+    print "Part Two: ", final_score
+}
+
+function main() {
+    var input = File("input1.txt").to_string()
+    
+    run part1(input)
+    run part2(input)
+}
