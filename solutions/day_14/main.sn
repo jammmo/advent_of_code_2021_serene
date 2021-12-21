@@ -1,0 +1,124 @@
+function split(input: String) -> Vector of String {
+    var lines = Vector(String)
+
+    var current_line = ""
+    for (x in input) {
+        if (x == '\n') {
+            run lines.append!(current_line)
+            set current_line = ""
+        } else {
+            run current_line.append!(x)
+        }
+    }
+
+    return lines
+}
+
+function max(vec: Vector of Int64) -> Int64 {
+    var my_max = vec[0]
+
+    for (x in vec) {
+        if (x > my_max) {
+            set my_max = x
+        }
+    }
+
+    return my_max
+}
+
+function min(vec: Vector of Int64) -> Int64 {
+    var my_min = vec[0]
+
+    for (x in vec) {
+        if (x < my_min) {
+            set my_min = x
+        }
+    }
+
+    return my_min
+}
+
+function polymerization(input: String, rounds: Int64) -> Int64 {
+    var rules_raw = split(input)
+    var template = rules_raw[0]
+
+    run rules_raw.delete!(0)    // remove template
+    run rules_raw.delete!(0)    // remove empty line
+
+    var rules: Vector of Array of String = []
+    for (x in rules_raw) {
+        var pair = ""
+        run pair.append!(x[0])
+        run pair.append!(x[1])
+
+        var product = ""
+        run product.append!(x[6])
+
+        run rules.append!([pair, product])
+    }
+
+
+    var polymer = [] as Vector of Char
+    for (x in template) {
+        run polymer.append!(x)
+    }
+
+    for (round = 0, rounds) {
+        var insertions_index = [] as Vector of Int64
+        var insertions_letter = [] as Vector of Char
+
+        for (i = 1, polymer.length()) {
+            var pair = ""
+            run pair.append!(polymer[i - 1])
+            run pair.append!(polymer[i])
+
+            for (rule in rules) {
+                if (rule[0] == pair) {
+                    run insertions_index.append!(i)
+                    run insertions_letter.append!(rule[1][0])
+                }
+            }
+        }
+
+        while (insertions_index.length() > 0) {
+            const new_letter = insertions_letter.pop!()
+            const new_letter_index = insertions_index.pop!()
+
+            run polymer.insert!(new_letter_index, new_letter)
+        }
+        print "> Round: ", round, ", Length: ", polymer.length()
+    }
+
+    var seen_letters: Vector of Char  = []
+    var letter_frequency: Vector of Int64 = []
+
+    for (x in polymer) {
+        var found_index = -1
+        for (i = 0, seen_letters.length()) {
+            if (x == seen_letters[i]) {
+                set found_index = i
+                break
+            }
+        }
+
+        if (found_index >= 0) {
+            set letter_frequency[found_index] += 1
+        } else {
+            run seen_letters.append!(x)
+            run letter_frequency.append!(1)
+        }
+    }
+
+    const answer = max(letter_frequency) - min(letter_frequency)
+    return answer
+}
+
+function main() {
+    var input = File("input1.txt").to_string()
+
+    const answer1 = polymerization(input, 10)
+    print "Part One: ", answer1
+
+    const answer2 = polymerization(input, 40)
+    print "Part Two: ", answer2
+}
