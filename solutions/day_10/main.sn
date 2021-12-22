@@ -35,7 +35,7 @@ function sort(mutate arr: Vector of Int64) {
     }
 }
 
-function part1(input: String) {
+function part1(input: String) -> Int64 {
     var lines = split(input)
     var score = 0
 
@@ -79,10 +79,10 @@ function part1(input: String) {
         }
     }
 
-    print "Part One: ", score
+    return score
 }
 
-function part2(input: String) {
+function part2(input: String) -> Int64 {
     var lines = split(input)
     var scores = Vector(Int64)
 
@@ -158,12 +158,12 @@ function part2(input: String) {
     run sort(mutate scores)
     const final_score = scores[scores.length() / 2]
 
-    print "Part Two: ", final_score
+    return final_score
 }
 
 function main() {
     var input = File("input1.txt").to_string()
     
-    run part1(input)
-    run part2(input)
+    print "Part One: ", part1(input)
+    print "Part Two: ", part2(input)
 }
