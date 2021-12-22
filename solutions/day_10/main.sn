@@ -1,9 +1,9 @@
 function split(input: String) -> Vector of String {
-    var lines = Vector(String)
+    var lines: Vector of String = []
 
     var current_line = ""
-    for (x in input) {
-        if (x == '\n') {
+    for x in input {
+        if x == '\n' {
             run lines.append!(current_line)
             set current_line = ""
         } else {
@@ -16,15 +16,15 @@ function split(input: String) -> Vector of String {
 
 // Selection sort
 function sort(mutate arr: Vector of Int64) {
-    if (arr.length() == 0) {
+    if arr.length() == 0 {
         return
     }
 
-    for (i = 0, arr.length()) {
+    for i = 0; arr.length() {
         var min = arr[i]
         var min_index = i
-        for (j = i, arr.length()) {
-            if (arr[j] < min) {
+        for j = i; arr.length() {
+            if arr[j] < min {
                 set min = arr[j]
                 set min_index = j
             }
@@ -39,38 +39,38 @@ function part1(input: String) -> Int64 {
     var lines = split(input)
     var score = 0
 
-    for (line in lines) {
-        var opening_stack = Vector(Char)
+    for line in lines {
+        var opening_stack: Vector of Char = []
 
-        for (x in line) {
+        for x in line {
             match (x) {
                 '(', '[', '{', '<' -> {
                     run opening_stack.append!(x)
                 }
                 ')' -> {
                     const last = opening_stack.pop!()
-                    if (last != '(') {
+                    if last != '(' {
                         set score += 3
                         break
                     }
                 }
                 ']' -> {
                     const last = opening_stack.pop!()
-                    if (last != '[') {
+                    if last != '[' {
                         set score += 57
                         break
                     }
                 }
                 '}' -> {
                     const last = opening_stack.pop!()
-                    if (last != '{') {
+                    if last != '{' {
                         set score += 1197
                         break
                     }
                 }
                 '>' -> {
                     const last = opening_stack.pop!()
-                    if (last != '<') {
+                    if last != '<' {
                         set score += 25137
                         break
                     }
@@ -84,42 +84,42 @@ function part1(input: String) -> Int64 {
 
 function part2(input: String) -> Int64 {
     var lines = split(input)
-    var scores = Vector(Int64)
+    var scores: Vector of Int64 = []
 
-    for (line in lines) {
-        var opening_stack = Vector(Char)
+    for line in lines {
+        var opening_stack: Vector of Char = []
         var closing_string = ""
         var corrupt = False
 
-        for (x in line) {
+        for x in line {
             match (x) {
                 '(', '[', '{', '<' -> {
                     run opening_stack.append!(x)
                 }
                 ')' -> {
                     const last = opening_stack.pop!()
-                    if (last != '(') {
+                    if last != '(' {
                         set corrupt = True
                         break
                     }
                 }
                 ']' -> {
                     const last = opening_stack.pop!()
-                    if (last != '[') {
+                    if last != '[' {
                         set corrupt = True
                         break
                     }
                 }
                 '}' -> {
                     const last = opening_stack.pop!()
-                    if (last != '{') {
+                    if last != '{' {
                         set corrupt = True
                         break
                     }
                 }
                 '>' -> {
                     const last = opening_stack.pop!()
-                    if (last != '<') {
+                    if last != '<' {
                         set corrupt = True
                         break
                     }
@@ -127,10 +127,10 @@ function part2(input: String) -> Int64 {
             }
         }
 
-        if (corrupt == False) {
+        if corrupt == False {
             var score = 0
             const len = opening_stack.length()
-            for (i = 0, len) {
+            for i = 0; len {
                 const x = opening_stack.pop!()
                 match (x) {
                     '(' -> {

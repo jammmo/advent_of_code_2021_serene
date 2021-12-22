@@ -3,8 +3,8 @@ include input1.sn
 function part1(input: Array of Int64) -> Int64 {
     var increases = 0
 
-    for (i = 1, input.length()) {
-        if (input[i] > input[i - 1]) {
+    for i = 1; input.length() {
+        if input[i] > input[i - 1] {
             set increases += 1
         }
     }
@@ -13,20 +13,20 @@ function part1(input: Array of Int64) -> Int64 {
 }
 
 function part2(input: Array of Int64) -> Int64 {
-    var window = Array(input[0], input[1], input[2])
+    var window = [input[0], input[1], input[2]]
     var last_sum = window[0] + window[1] + window[2]
 
     var increases = 0
 
-    for (i = 3, input.length()) {
+    for i = 3; input.length() {
         var sum = 0
         set window[i % 3] = input[i]
         
-        for (x in window) {
+        for x in window {
             set sum += x
         }
 
-        if (sum > last_sum) {
+        if sum > last_sum {
             set increases += 1
         }
 

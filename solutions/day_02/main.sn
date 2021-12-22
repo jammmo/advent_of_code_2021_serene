@@ -5,11 +5,11 @@ type Command struct {
 
 function parseCommands(text: String) -> Vector of Command {
     var i = 0
-    var commands = Vector(Command)
+    var commands: Vector of Command = []
     var current_command = Command("", 0)
     var state = 2   // 0: parsing command, 1: parsing number, 2: done parsing
-    while (True) {
-        if (i < text.length()) {
+    while True {
+        if i < text.length() {
             match (text[i]) {   // assume distance is 0 through 9
                 '0' -> {
                     set current_command.distance = 0
@@ -42,16 +42,16 @@ function parseCommands(text: String) -> Vector of Command {
                     set current_command.distance = 9
                 }
                 '\n' -> {
-                    if (state == 1) {
+                    if state == 1 {
                         run commands.append!(current_command)
                         set state = 2
                     }
                 }
                 else -> {
-                    if (state == 2) {
+                    if state == 2 {
                         set state = 0
                         var direction = ""
-                        while (text[i] != ' ') {
+                        while text[i] != ' ' {
                             run direction.append!(text[i])
                             set i += 1
                         }
@@ -74,7 +74,7 @@ function part1(commands: Vector of Command) -> Int64 {
     var horizontal = 0
     var depth = 0
 
-    for (x in commands) {
+    for x in commands {
         match (x.direction) {
             "forward" -> set horizontal += x.distance
             "down" -> set depth += x.distance
@@ -94,7 +94,7 @@ function part2(commands: Vector of Command) -> Int64 {
     var depth = 0
     var aim = 0
 
-    for (x in commands) {
+    for x in commands {
         match (x.direction) {
             "forward" -> {
                 set horizontal += x.distance
